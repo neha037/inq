@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:ffi';
+import 'OnBoarding.dart';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -26,17 +30,27 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  Void initState() {
+    Timer(Duration(seconds: 3), openOnBoard);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('asset/image/inq.png'),
-            )
-          ),
+              image: DecorationImage(
+            image: AssetImage('asset/image/inq.png'),
+          )),
         ),
       ),
     );
+  }
+
+  void openOnBoard() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => OnBoarding()));
   }
 }
