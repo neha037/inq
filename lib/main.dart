@@ -1,6 +1,8 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'OnBoarding.dart';
+// import 'dart:ffi';
+import 'package:inq/HomePage.dart';
+
+// import 'OnBoarding.dart';
 
 import 'package:flutter/material.dart';
 
@@ -30,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
-  Void initState() {
+  void initState() {
     Timer(Duration(seconds: 3), openOnBoard);
     super.initState();
   }
@@ -51,6 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void openOnBoard() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => OnBoarding()));
+        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 }
