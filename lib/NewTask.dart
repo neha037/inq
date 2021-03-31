@@ -1,24 +1,103 @@
 import 'package:flutter/material.dart';
 import 'package:inq/HomePage.dart';
+import 'task.dart';
 
 class NewTask extends StatelessWidget {
+  final String id;
+  final int check;
+  NewTask(this.id, this.check);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'avenir'),
-      home: NewTaske(),
+      home: NewTaske(id, check),
     );
   }
 }
 
+final List<Task> tasks = [
+  Task(id: 't1', title: 'HVCO Poster', date: DateTime.now()),
+  Task(id: 't2', title: 'SE APP Development', date: DateTime.now()),
+  Task(id: 't3', title: 'Java Lab', date: DateTime.now()),
+];
+
 class NewTaske extends StatefulWidget {
+  final String id;
+  final int check;
+
+  NewTaske(this.id, this.check);
+
+  List<Task> getList() {
+    return tasks;
+  }
+
   @override
-  _NewTaskeState createState() => _NewTaskeState();
+  NewTaskeState createState() => NewTaskeState();
 }
 
-class _NewTaskeState extends State<NewTaske> {
+class NewTaskeState extends State<NewTaske> {
+  final titleController = TextEditingController();
+
+  DateTime selectedDate;
+  Task findTask(String id) => tasks.firstWhere((element) => element.id == id);
+
+  void _addNewTodo(String title, DateTime date) {
+    final newtodo = Task(
+      id: DateTime.now().toString(),
+      title: title,
+      date: date,
+    );
+    setState(() {
+      tasks.add(newtodo);
+    });
+  }
+
+  var monthNames = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEPT",
+    "OCT",
+    "NOV",
+    "DEC"
+  ];
+
+  void datepick() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2019),
+            lastDate: DateTime(2050))
+        .then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    });
+  }
+
+  void dateselec() {
+    setState(() {
+      if (widget.check == 1) {
+        selectedDate = findTask(widget.id).date;
+      }
+    });
+  }
+
   @override
+  void initState() {
+    super.initState();
+    dateselec();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -26,7 +105,7 @@ class _NewTaskeState extends State<NewTaske> {
         backgroundColor: Color(0xffB8336A),
         elevation: 0,
         title: Text(
-          "New Task",
+          (widget.check == 0) ? "New Task" : "Edit Task",
           style: TextStyle(fontSize: 28),
         ),
         leading: IconButton(
@@ -76,6 +155,10 @@ class _NewTaskeState extends State<NewTaske> {
                         decoration: InputDecoration(
                             hintText: "Title", border: InputBorder.none),
                         style: TextStyle(fontSize: 18),
+                        controller: titleController
+                          ..text = (widget.check == 1
+                              ? findTask(widget.id).title
+                              : null),
                       ),
                     ),
                     SizedBox(
@@ -83,39 +166,48 @@ class _NewTaskeState extends State<NewTaske> {
                     ),
                     Container(
                       padding: EdgeInsets.all(10),
-                      color: Colors.grey.withOpacity(0.2),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Due Date",
-                          border: InputBorder.none,
-                        ),
-                        style: TextStyle(fontSize: 18),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(selectedDate == null
+                                ? "No Due Date Choosen"
+                                : "${monthNames[selectedDate.month - 1]}, ${selectedDate.day}/${selectedDate.year}"),
+                          ),
+                          TextButton(
+                              onPressed: datepick,
+                              child: Text(
+                                'Choose Date',
+                                style: TextStyle(
+                                    color: Color(0xffB8336A),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ))
+                        ],
                       ),
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomePage()));
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 15),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            color: Color(0xffB8336A)),
-                        child: Center(
-                          child: Text(
-                            "Add Task",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
+                    TextButton(
+                        onPressed: () {
+                          // print(titleInput);
+                          _addNewTodo(titleController.text, selectedDate);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()));
+                                  tasks.removeWhere((element) => element.id == widget.id);
+                        },
+                        style: ButtonStyle(
+                          // padding: EdgeInsets.symmetric(vertical: 15),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color(0xffB8336A)),
+                          // backgroundColor: Color(0xffB8336A),
                         ),
-                      ),
-                    )
+                        child: Text(
+                          'Add Todo',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        )),
                   ],
                 ),
               ),

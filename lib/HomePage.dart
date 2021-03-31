@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'NewTask.dart';
-import 'task.dart';
+// import 'task.dart';
+import 'dart:math';
 
 class HomePage extends StatelessWidget {
   @override
@@ -44,11 +45,15 @@ class _HomePageeState extends State<HomePagee> {
     "NOV",
     "DEC"
   ];
-  final List<Task> tasks = [
-    Task(id: 't1', title: 'HVCO Poster', date: DateTime.now()),
-    Task(id: 't2', title: 'SE APP Development', date: DateTime.now()),
-    Task(id: 't3', title: 'Java Lab', date: DateTime.now()),
-  ];
+  // final List<Task> tasks = [
+  //   Task(id: 't1', title: 'HVCO Poster', date: DateTime.now()),
+  //   Task(id: 't2', title: 'SE APP Development', date: DateTime.now()),
+  //   Task(id: 't3', title: 'Java Lab', date: DateTime.now()),
+  // ];
+  NewTaske mlist = new NewTaske('123', 0);
+  // final List<Task> tasks;
+  // tasks = mlist.getList() ;
+
   CalendarController ctrlr = new CalendarController();
   @override
   Widget build(BuildContext context) {
@@ -77,7 +82,7 @@ class _HomePageeState extends State<HomePagee> {
               ),
               Container(
                 height: 55,
-                color: Colors.amber,
+                color: Color(0xffB8336A),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -169,17 +174,34 @@ class _HomePageeState extends State<HomePagee> {
                           ),
                         ),
                         Column(
-                          children: tasks.map((tx) {
-
-                            return taskWidget(
-                              Colors.deepPurple,
-                              tx.title,
-                              "${monthNames[tx.date.month - 1]}, ${tx.date.day}/${tx.date.year}",
-                            );
-
+                          children: mlist.getList().map((tx) {
+                            if (filterType == "monthly" &&
+                                tx.date.month == DateTime.now().month) {
+                              return taskWidget(
+                                tx.id,
+                                Color((Random().nextDouble() * 0xFFFFFF)
+                                        .toInt())
+                                    .withOpacity(1.0),
+                                tx.title,
+                                "${monthNames[tx.date.month - 1]}, ${tx.date.day}/${tx.date.year}",
+                              );
+                            }
+                            if (filterType == "today" &&
+                                tx.date.month == DateTime.now().month &&
+                                tx.date.day == DateTime.now().day &&
+                                tx.date.year == DateTime.now().year) {
+                              return taskWidget(
+                                tx.id,
+                                Color((Random().nextDouble() * 0xFFFFFF)
+                                        .toInt())
+                                    .withOpacity(1.0),
+                                tx.title,
+                                "${monthNames[tx.date.month - 1]}, ${tx.date.day}/${tx.date.year}",
+                              );
+                            }
+                            return Container();
                           }).toList(),
                         ),
-                        // listname.map((hotel){function, return }).toList()
                       ]),
                 ),
               ),
@@ -215,7 +237,7 @@ class _HomePageeState extends State<HomePagee> {
     setState(() {});
   }
 
-  Slidable taskWidget(Color color, String title, String time) {
+  Slidable taskWidget(String id, Color color, String title, String time) {
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.3,
@@ -250,7 +272,7 @@ class _HomePageeState extends State<HomePagee> {
                 ),
                 Text(
                   time,
-                  style: TextStyle(color: Colors.grey, fontSize: 18),
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
                 )
               ],
             ),
@@ -270,21 +292,36 @@ class _HomePageeState extends State<HomePagee> {
           caption: "Edit",
           color: Colors.white,
           icon: Icons.edit,
-          onTap: () {},
+          onTap: () => edi(id),
           // here we need to add the function for edditing the list
         ),
         IconSlideAction(
           caption: "Delete",
           color: color,
           icon: Icons.edit,
-          onTap: () {},
-          // here we need to add the function to delete the item in the list
+          onTap: () => del(id),
         )
       ],
     );
   }
 
+  void edi(String id) {
+    setState(() {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => NewTask(id, 1)));
+    });
+  }
+
+  void del(String id) {
+    setState(() {
+      tasks.removeWhere((element) => element.id == id);
+    });
+  }
+
   openNewTask() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => NewTask()));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => NewTask(DateTime.now().toString(), 0)));
   }
 }
