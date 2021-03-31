@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'NewTask.dart';
+import 'task.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -43,6 +44,11 @@ class _HomePageeState extends State<HomePagee> {
     "NOV",
     "DEC"
   ];
+  final List<Task> tasks = [
+    Task(id: 't1', title: 'HVCO Poster', date: DateTime.now()),
+    Task(id: 't2', title: 'SE APP Development', date: DateTime.now()),
+    Task(id: 't3', title: 'Java Lab', date: DateTime.now()),
+  ];
   CalendarController ctrlr = new CalendarController();
   @override
   Widget build(BuildContext context) {
@@ -71,7 +77,7 @@ class _HomePageeState extends State<HomePagee> {
               ),
               Container(
                 height: 55,
-                color: Color(0xffB8336A),
+                color: Colors.amber,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -162,10 +168,18 @@ class _HomePageeState extends State<HomePagee> {
                             ],
                           ),
                         ),
-                        taskWidget(Colors.deepPurple, "HVCO Poster", "9:00 AM"),
-                        taskWidget(
-                            Colors.blue, "SE APP Development", "9:00 AM"),
-                        taskWidget(Colors.green, "JAva Lab", "9:00 AM"),
+                        Column(
+                          children: tasks.map((tx) {
+
+                            return taskWidget(
+                              Colors.deepPurple,
+                              tx.title,
+                              "${monthNames[tx.date.month - 1]}, ${tx.date.day}/${tx.date.year}",
+                            );
+
+                          }).toList(),
+                        ),
+                        // listname.map((hotel){function, return }).toList()
                       ]),
                 ),
               ),
