@@ -83,68 +83,37 @@ class _NewTaskeState extends State<NewTaske> {
                     ),
                     Container(
                       padding: EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Description",
-                            style: TextStyle(fontSize: 18),
+                      color: Colors.grey.withOpacity(0.2),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Due Date",
+                          border: InputBorder.none,
+                        ),
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePage()));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            color: Color(0xffB8336A)),
+                        child: Center(
+                          child: Text(
+                            "Add Task",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: 150,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(15),
-                                    topLeft: Radius.circular(15)),
-                                border: Border.all(
-                                    color: Colors.grey.withOpacity(0.5))),
-                            child: TextField(
-                              maxLines: 6,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Add description here",
-                              ),
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            color: Colors.grey.withOpacity(0.2),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: "Due Date",
-                                border: InputBorder.none,
-                              ),
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                                color: Color(0xffB8336A)),
-                            child: Center(
-                              child: Text(
-                                "Add Task",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ),
-                          )
-                        ],
+                        ),
                       ),
                     )
                   ],
